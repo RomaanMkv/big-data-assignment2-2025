@@ -1,20 +1,33 @@
 #!/bin/bash
 
-source .venv/bin/activate
+# Exit on error
+set -e
 
+echo "Starting data preparation..."
 
-# Python of the driver (/app/.venv/bin/python)
-export PYSPARK_DRIVER_PYTHON=$(which python) 
+# Create necessary HDFS directories
+echo "Creating HDFS directories..."
+hdfs dfs -mkdir -p /data
+hdfs dfs -mkdir -p /index/data
 
+# Check if parquet file exists in HDFS
+hdfs dfs -put /app/a.parquet /a.parquet
 
-unset PYSPARK_PYTHON
+if ! hdfs dfs -test -f /a.parquet; then
+    echo "Parquet file not found in HDFS. Please ensure a.parquet is uploaded to HDFS root directory."
+    exit 1
+fi
 
-# DOWNLOAD a.parquet or any parquet file before you run this
+# Run the Python script
+echo "Running data preparation script..."
+python3 prepare_data.py
 
-hdfs dfs -put -f a.parquet / && \
-    spark-submit prepare_data.py && \
-    echo "Putting data to hdfs" && \
-    hdfs dfs -put data / && \
-    hdfs dfs -ls /data && \
-    hdfs dfs -ls /index/data && \
-    echo "done data preparation!"
+# Verify the results
+echo "Verifying results..."
+echo "Checking /data directory:"
+hdfs dfs -ls /data
+
+echo "Checking /index/data directory:"
+hdfs dfs -ls /index/data
+
+echo "Data preparation complete!"

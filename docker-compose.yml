@@ -4,10 +4,12 @@ services:
     container_name: cluster-master
     ports:
       - "8088:8088"
+      - "8042:8042"
       - "4040:4040"
       - "19888:19888"
       - "9000:9000"
       - "9870:9870"
+      - "9868:9868"
     volumes:
       - "./app:/app"
     networks:
@@ -19,26 +21,30 @@ services:
     tty: true
     working_dir: /app
     # You can comment the entrypoint to run the script manually inside the container
-    entrypoint: 
-      - bash
-      - /app/app.sh
+    # entrypoint: 
+    #   - bash
+    #   - /app/app.sh
     
   cluster-slave-1:
     image: firasj/spark-docker-cluster
     container_name: cluster-slave-1
+    ports: # <-- Add this
+      - "8043:8042" # Map slave-1's 8042 to host's 8043
     networks:
       - spark-cluster
     hostname: cluster-slave-1
     tty: true
-  # cluster-slave-2:
-  #   image: firasj/spark-docker-cluster
-  #   container_name: cluster-slave-2
-  #   networks:
-  #     - spark-cluster
-  #   depends_on:
-  #     - cluster-slave-1
-  #   hostname: cluster-slave-2
-  #   tty: true
+  cluster-slave-2:
+    image: firasj/spark-docker-cluster
+    container_name: cluster-slave-2
+    ports: # <-- Add this
+      - "8044:8042" # Map slave-2's 8042 to host's 8044
+    networks:
+      - spark-cluster
+    depends_on:
+      - cluster-slave-1
+    hostname: cluster-slave-2
+    tty: true
   cassandra-server:
     image: cassandra
     container_name: cassandra-server

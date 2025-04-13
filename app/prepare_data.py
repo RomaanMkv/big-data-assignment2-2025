@@ -25,22 +25,18 @@ def create_doc(row):
         return False
 
 def main():
-    # Create Spark session
     spark = create_spark_session()
     
     try:
-        # Read parquet file
         print("Reading parquet file...")
         df = spark.read.parquet("/a.parquet")
         
-        # Get total count and sample size
         total_count = df.count()
-        n = min(1000, total_count)  # Take at most 1000 documents
+        n = min(1000, total_count)
         
         print(f"Total documents in parquet: {total_count}")
         print(f"Sampling {n} documents...")
         
-        # Sample documents
         df = df.select(['id', 'title', 'text']) \
                .sample(fraction=100 * n / total_count, seed=0) \
                .limit(n)

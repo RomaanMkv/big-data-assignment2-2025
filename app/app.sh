@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# Exit on error
-set -e
 
 echo "Starting services..."
 # Start ssh server
 service ssh restart 
 
-# Starting Hadoop and Cassandra services
+# Starting the services
 bash start-services.sh
 
 echo "Setting up Python environment..."
@@ -15,22 +13,22 @@ echo "Setting up Python environment..."
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install required packages
+# Install any packages
 pip install -r requirements.txt
 
-# Package the virtual environment
+# Package the virtual env.
 venv-pack -o .venv.tar.gz
 
 echo "Preparing data..."
-# Prepare and load data
+# Collect data
 bash prepare_data.sh
 
 echo "Running indexer..."
-# Run the indexer on the prepared data
+# Run the indexer
 bash index.sh
 
 echo "Testing search engine..."
-# Run a test search query
+# Run the ranker
 bash search.sh "gucci dog"
 
 echo "Setup complete! The search engine is ready to use."

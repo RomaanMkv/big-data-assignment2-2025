@@ -20,17 +20,14 @@ def create_keyspace_and_tables(cluster):
     """Create the keyspace and tables for the search engine"""
     session = cluster.connect()
     
-    # Create keyspace
     print("Creating keyspace...")
     session.execute("""
         CREATE KEYSPACE IF NOT EXISTS search_engine
         WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}
     """)
     
-    # Switch to our keyspace
     session.set_keyspace('search_engine')
     
-    # Create tables
     print("Creating tables...")
     
     # Table for term frequency
@@ -72,11 +69,9 @@ def create_keyspace_and_tables(cluster):
     session.shutdown()
 
 def main():
-    # Connect to Cassandra
     print("Connecting to Cassandra...")
     cluster = Cluster(['cassandra-server'])
     
-    # Wait for Cassandra to become available
     if not wait_for_cassandra(cluster):
         print("Failed to connect to Cassandra after multiple attempts")
         return

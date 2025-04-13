@@ -9,8 +9,10 @@ fi
 # Activate virtual environment
 source .venv/bin/activate
 
-# Set Python paths for PySpark
+# Python of the driver (/app/.venv/bin/python)
 export PYSPARK_DRIVER_PYTHON=$(which python)
+
+# Python of the excutor (./.venv/bin/python)
 export PYSPARK_PYTHON=./.venv/bin/python
 
 echo "Searching for: $1"
@@ -24,8 +26,6 @@ spark-submit \
     --conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./.venv/bin/python \
     --conf spark.yarn.appMasterEnv.PYSPARK_DRIVER_PYTHON=$(which python) \
     query.py "$1"
-
-# spark-submit --master yarn --archives /app/.venv.tar.gz#.venv query.py  $1
 
 # Check if search was successful
 if [ $? -ne 0 ]; then

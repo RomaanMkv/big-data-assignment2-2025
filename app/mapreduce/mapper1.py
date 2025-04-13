@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import re
 import os
@@ -6,7 +5,7 @@ import os
 def preprocess(text):
     """Preprocess text by converting to lowercase and removing non-alphanumeric characters"""
     text = text.lower()
-    text = re.sub(r'[^\w\s]', '', text)  # Keep word chars and spaces
+    text = re.sub(r'[^\w\s]', '', text)
     return text.split()
 
 def main():
@@ -36,7 +35,7 @@ def main():
         # Count term frequencies
         term_freq = {}
         for token in tokens:
-            if token:  # Skip empty tokens
+            if token:
                 term_freq[token] = term_freq.get(token, 0) + 1
         
         # Emit term frequencies

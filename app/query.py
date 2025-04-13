@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import re
 import math
@@ -9,7 +8,7 @@ from functools import partial
 def preprocess(text):
     """Preprocess text by converting to lowercase and removing non-alphanumeric characters"""
     text = text.lower()
-    text = re.sub(r'[^\w\s]', '', text)  # Keep word chars and spaces
+    text = re.sub(r'[^\w\s]', '', text)
     return [t for t in text.split() if t]
 
 def get_cassandra_session():
@@ -70,7 +69,6 @@ def main():
         print("Usage: python3 query.py \"your search query\"")
         sys.exit(1)
     
-    # Get query from command line
     query = sys.argv[1]
     query_terms = preprocess(query)
     
@@ -78,13 +76,11 @@ def main():
         print("No valid search terms in query")
         sys.exit(1)
     
-    # Initialize Spark
     spark = SparkSession.builder \
         .appName("BM25 Search") \
         .getOrCreate()
     sc = spark.sparkContext
     
-    # Connect to Cassandra
     cluster, session = get_cassandra_session()
     
     try:
@@ -146,7 +142,6 @@ def main():
             ascending=False
         ).take(10)
         
-        # Print results
         print(f"\nTop 10 results for query: {query}\n")
         for i, (doc_id, (title, score)) in enumerate(top_10, 1):
             print(f"{i}. {title} (ID: {doc_id}, Score: {score:.4f})")

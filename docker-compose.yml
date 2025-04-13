@@ -28,7 +28,7 @@ services:
   cluster-slave-1:
     image: firasj/spark-docker-cluster
     container_name: cluster-slave-1
-    ports: # <-- Add this
+    ports:
       - "8043:8042" # Map slave-1's 8042 to host's 8043
     networks:
       - spark-cluster
@@ -37,7 +37,7 @@ services:
   cluster-slave-2:
     image: firasj/spark-docker-cluster
     container_name: cluster-slave-2
-    ports: # <-- Add this
+    ports:
       - "8044:8042" # Map slave-2's 8042 to host's 8044
     networks:
       - spark-cluster

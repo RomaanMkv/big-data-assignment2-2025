@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 from cassandra.cluster import Cluster
 
@@ -20,7 +19,6 @@ def prepare_statements(session):
     }
 
 def main():
-    # Connect to Cassandra
     cluster, session = connect_to_cassandra()
     prepared_stmts = prepare_statements(session)
     

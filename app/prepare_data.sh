@@ -1,31 +1,28 @@
 #!/bin/bash
 
-# Exit on error
-set -e
-
 echo "Starting data preparation..."
 
-# Create necessary HDFS directories
 echo "Creating HDFS directories..."
 hdfs dfs -mkdir -p /data
 hdfs dfs -mkdir -p /index/data
 
-# Check if parquet file exists in HDFS
 hdfs dfs -put /app/a.parquet /a.parquet
 
+# Check if parquet file exists in HDFS
 if ! hdfs dfs -test -f /a.parquet; then
     echo "Parquet file not found in HDFS. Please ensure a.parquet is uploaded to HDFS root directory."
     exit 1
 fi
 
-# Run the Python script
 echo "Running data preparation script..."
 python3 prepare_data.py
 
-# Verify the results
+# uncomment the following line if you want to copy data from local to HDFS
+# Be careful, this takes a long time
+# echo "Copying data from local to HDFS..."
+# hdfs dfs -put ./data /data
+
 echo "Verifying results..."
-echo "Checking /data directory:"
-hdfs dfs -ls /data
 
 echo "Checking /index/data directory:"
 hdfs dfs -ls /index/data

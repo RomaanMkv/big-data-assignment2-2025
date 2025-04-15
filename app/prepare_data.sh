@@ -15,7 +15,7 @@ if ! hdfs dfs -test -f /a.parquet; then
 fi
 
 echo "Running data preparation script..."
-python3 prepare_data.py
+spark-submit prepare_data.py
 
 # uncomment the following line if you want to copy data from local to HDFS
 # Be careful, this takes a long time
